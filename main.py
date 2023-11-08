@@ -11,6 +11,12 @@ def index():
 def add(a, b):
     return a + b
 
+def sub(a, b):
+    return a - b
+
+def mul(a, b):
+    return a * b
+
 @app.route('/a1g/<int:a>/<int:b>', methods=['GET'])
 def enpoint_a1g(a, b):
     return f'Resultat: {add(a, b)}'
@@ -128,6 +134,49 @@ def endpoint_b1e():
 def enpoint_b2g(a, b):
     sum = add(a, b)
     return jsonify({"result": sum})
+
+#B2F
+def power_of(func, a, b):
+    b = func(a, b)
+    return a ** b
+
+@app.route('/b2f', methods=['GET', 'POST'])
+def endpoint_b2f():
+    if request.method == 'POST':
+        try:
+            num1 = request.form.get('num1') # Daten aus Formular holen 
+            num2 = request.form.get('num2') # Daten aus Formular holen
+            operation = request.form.get('operation') # Daten aus Formular holen
+            if num1 and num2:
+                num1 = int(num1)
+                num2 = int(num2)
+                match operation:
+                    case 'add':
+                        operation = add
+                    case 'sub':
+                        operation = sub
+                    case 'mul':
+                        operation = mul
+                result = power_of(operation, num1, num2)
+                return jsonify({"result": result})
+            else:
+                return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste."}), 400
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    else:
+        return render_template_string("""
+            <form method="POST">
+                <label for="num1">Geben Sie Ihre erste Zahl ein:</label>
+                <input type="number" id="listInput" name="num1">
+                <label for="num2">Geben Sie Ihre zweite Zahl ein:</label>
+                <input type="number" id="listInput" name="num2">
+                <label for="operation">Wählen Sie Ihre Operation:</label>
+                <select name="operation" id="operation">
+                    <option value="add">Addieren</option>
+                    <option value="sub">Subtrahieren</option>
+                    <option value="mul">Multiplizieren</option>
+                <input type="submit" value="Potenzieren">
+            </form>""")
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
