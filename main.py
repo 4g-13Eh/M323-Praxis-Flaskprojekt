@@ -122,6 +122,12 @@ def endpoint_b1e():
                 <input type="text" id="listInput" name="listInput">
                 <input type="submit" value="Sortieren">
             </form>""")
+    
+#B2G
+@app.route('/b2g/<int:a>/<int:b>', methods=['GET'])
+def enpoint_b2g(a, b):
+    sum = add(a, b)
+    return jsonify({"result": sum})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
