@@ -1,4 +1,4 @@
-from app import app  # Hier importierst du die Flask-App aus deinem Anwendungsmodul
+from flask import Flask, request, jsonify
 
-if __name__ == '__main__':
-    app.run(debug=True)  # Starte die Flask-Anwendung im Debug-Modus
+app = Flask(__name__)
+
