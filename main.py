@@ -11,7 +11,7 @@ def index():
 def add(a, b):
     return a + b
 
-@app.route('/A1G/<int:a>/<int:b>', methods=['GET'])
+@app.route('/a1g/<int:a>/<int:b>', methods=['GET'])
 def enpoint_a1g(a, b):
     return f'Resultat: {add(a, b)}'
 
@@ -41,6 +41,32 @@ def convert_list_to_tuple():
                 <input type="text" id="listInput" name="listInput">
                 <input type="submit" value="In Tupel konvertieren">
             </form>""")
+    
+#A1E
+
+
+#B1G
+def gcd(a, b):
+    r = a % b
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+@app.route('/b1g/<int:a>/<int:b>', methods=['GET'])
+def endpoint_b1g(a, b):
+    return f'Resultat: {gcd(a, b)}'
+
+
+#B1F
+def fibonacci(n):
+    if n <= 1:
+        return n
+    else:
+        return fibonacci(n-1) + fibonacci(n-2)
+
+@app.route('/b1f/<int:n>', methods=['GET'])
+def endpoint_b1f(n):
+    return f'Resultat: {fibonacci(n)}'
 
 
 if __name__ == '__main__':
