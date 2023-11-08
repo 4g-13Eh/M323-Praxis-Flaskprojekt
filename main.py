@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 
 app = Flask(__name__)
 
@@ -12,7 +12,7 @@ def add(a, b):
 
 @app.route('/A1G/<int:a>/<int:b>', methods=['GET'])
 def enpoint_a1g(a, b):
-    return jsonify({'result': add(a, b)})
+    return f'Resultat: {add(a, b)}'
 
 
 if __name__ == '__main__':
