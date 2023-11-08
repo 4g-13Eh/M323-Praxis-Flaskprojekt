@@ -89,6 +89,39 @@ def fibonacci(n):
 def endpoint_b1f(n):
     return f'Resultat: {fibonacci(n)}'
 
+#B1E
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+
+def print_nums(numbers):
+    for num in numbers:
+        print(num, end=" ")
+    print()
+
+@app.route('/b1e', methods=['GET', 'POST'])
+def endpoint_b1e():
+    if request.method == 'POST':
+        try:
+            data = request.form.get('listInput') # Daten aus Formular holen 
+            if data:
+                list_data = [int(item.strip()) for item in data.split(',')] # String in Liste umwandeln
+                bubble_sort(list_data)
+                return jsonify({"result": list_data})
+            else:
+                return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste."}), 400
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    else:
+        return render_template_string("""
+            <form method="POST">
+                <label for="listInput">Geben Sie Ihre Liste ein (z. B. 29, 2, 1, 40):</label>
+                <input type="text" id="listInput" name="listInput">
+                <input type="submit" value="Sortieren">
+            </form>""")
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
