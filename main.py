@@ -1,11 +1,11 @@
-from flask import Flask, request, jsonify, render_template_string
+from flask import Flask, request, jsonify, render_template_string, render_template
 import json
 
 app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def index():
-    return "Shahins Praxisarbeit fürs Modul 323"
+    return render_template('index.html')
 
 #A1G
 def add(a, b):
@@ -176,6 +176,30 @@ def endpoint_b2f():
                     <option value="sub">Subtrahieren</option>
                     <option value="mul">Multiplizieren</option>
                 <input type="submit" value="Potenzieren">
+            </form>""")
+
+#B2E    
+def greet(text):
+    def inner_func():
+        return f'Hello {text}!'
+    inner_func()
+
+@app.route('/b2e', methods=['GET', 'POST'])
+def endpoint_b2e():
+    if request.method == 'POST':
+        try:
+            text = request.form.get('text') # Daten aus Formular holen 
+            if text:
+                result = outer_func(text)
+                return jsonify({"result": result})
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    else:
+        return render_template_string("""
+            <form method="POST">
+                <label for="text">Geben Sie Ihren Text ein:</label>
+                <input type="text" id="text" name="text">
+                <input type="submit" value="Ausgeben">
             </form>""")
 
 if __name__ == '__main__':
