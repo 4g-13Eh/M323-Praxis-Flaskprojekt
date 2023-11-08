@@ -43,6 +43,27 @@ def convert_list_to_tuple():
             </form>""")
     
 #A1E
+#OO
+class SquareCalculator:
+    def __init__(self):
+        pass
+    def calculate_square(self, a):
+        return a * a
+    
+# procedural
+def calculate_square(a):
+    return a * a
+
+# functional
+calculate_square = lambda a: a * a
+
+@app.route('/a1e/<int:a>', methods=['GET'])
+def endpoint_a1e(a):
+    calc = SquareCalculator()
+    oo_res = calc.calculate_square(a)
+    proc_res = calculate_square(a)
+    func_res = calculate_square(a)
+    return f'Resultat: OO: {oo_res}, Procedural: {proc_res}, Functional: {func_res}'
 
 
 #B1G
