@@ -166,10 +166,11 @@ def endpoint_b2f():
     else:
         return render_template_string("""
             <form method="POST">
+                <p>Die Basis ist die erste Zahl, der Exponent wird von den zwei Zahlen und der ausgewählten Operation bestummen</p>
                 <label for="num1">Geben Sie Ihre erste Zahl ein:</label>
-                <input type="number" id="listInput" name="num1">
+                <input type="number" id="num1" name="num1">
                 <label for="num2">Geben Sie Ihre zweite Zahl ein:</label>
-                <input type="number" id="listInput" name="num2">
+                <input type="number" id="num2" name="num2">
                 <label for="operation">Wählen Sie Ihre Operation:</label>
                 <select name="operation" id="operation">
                     <option value="add">Addieren</option>
@@ -225,6 +226,32 @@ def square():
                 <label for="listInput">Geben Sie eine Zahl ein:</label>
                 <input type="number" id="num" name="num">
                 <input type="submit" value="Quadrieren">
+            </form>""")
+
+#B3F
+@app.route('/b3f', methods=['GET', 'POST'])
+def endpoint_b3f():
+    if request.method == 'POST':
+        try:
+            list1 = request.form.get('listInput1') # Daten aus Formular holen 
+            list2 = request.form.get('listInput2') # Daten aus Formular holen
+            if list1 and list2:
+                list1 = list1.split(",")
+                list2 = list2.split(",")
+                result = list(map(lambda x, y: max(int(x), int(y)), list1, list2))
+                return jsonify({"result": result})
+            else:
+                return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste."}), 400
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    else:
+        return render_template_string("""
+            <form method="POST">
+                <label for="listInput">Geben Sie zwei gleich grosse Listen ein (z. B. 1, 2, 3, 4). Eine neue Liste mit der 
+                                      jeweils grössten Zahl für jeden Index wird zurückgegeben:</label>
+                <input type="text" id="listInput1" name="listInput1">
+                <input type="text" id="listInput2" name="listInput2">
+                <input type="submit" value="Senden">
             </form>""")
 
 if __name__ == '__main__':
