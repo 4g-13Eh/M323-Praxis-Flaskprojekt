@@ -179,26 +179,30 @@ def endpoint_b2f():
             </form>""")
 
 #B2E    
-def greet(text):
-    def inner_func():
-        return f'Hello {text}!'
-    inner_func()
+def greet(greeting_text):
+    def display_name(name):
+        return f'{greeting_text} {name}!'
+    return display_name
 
 @app.route('/b2e', methods=['GET', 'POST'])
 def endpoint_b2e():
     if request.method == 'POST':
         try:
-            text = request.form.get('text') # Daten aus Formular holen 
-            if text:
-                result = outer_func(text)
+            text = request.form.get('greeting_text')  # Daten aus Formular holen
+            name = request.form.get('name')  # Daten aus Formular holen
+            if text and name:
+                text = greet(text)
+                result = text(name)
                 return jsonify({"result": result})
         except Exception as e:
             return jsonify({"error": str(e)}), 500
     else:
         return render_template_string("""
             <form method="POST">
-                <label for="text">Geben Sie Ihren Text ein:</label>
-                <input type="text" id="text" name="text">
+                <label for="greeting_text">Geben Sie Ihren Text ein:</label>
+                <input type="text" id="greeting_text" name="greeting_text">
+                <label for="name">Geben Sie Ihren Namen ein:</label>
+                <input type="text" id="name" name="name">
                 <input type="submit" value="Ausgeben">
             </form>""")
 
