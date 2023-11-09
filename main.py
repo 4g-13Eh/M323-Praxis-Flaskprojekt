@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template_string, render_template
+from functools import reduce
 import json
 
 app = Flask(__name__)
@@ -284,6 +285,44 @@ def endpoint_b3e():
                 </select>
                 <input type="submit" value="Senden">
             </form>""")
+
+#B4G
+@app.route('/b4g', methods=['GET', 'POST'])
+def endpoint_b4g():
+    if request.method == 'POST':
+        try:
+            input_list = request.form.get('list')
+            operation = request.form.get('operation')
+            if input_list:
+                input_list = json.loads(input_list)
+                match operation:
+                    case 'map':
+                        result = list(map(lambda x: x * x, input_list))
+                    case 'filter':
+                        result = list(filter(lambda x: x % 2 == 0, input_list))
+                    case 'reduce':
+                        input_list = list(map(int, input_list))
+                        result = reduce(lambda x, y: x + y, input_list)
+                return jsonify({"result": result})
+            else:
+                return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste."}), 400
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    else:
+        return render_template_string("""
+            <form method="POST">
+                <label for="list">Geben Sie eine Zahlenliste ein (z.B. [3,4,5,2]):</label>
+                <input type="text" id="list" name="list">
+                <select name="operation" id="operation">
+                    <option value="map">Map</option>
+                    <option value="filter">Filter</option>
+                    <option value="reduce">Reduce</option>
+                </select>
+                <input type="submit" value="Senden">
+            </form>""")
+    
+
+#B4F
 
 
 if __name__ == '__main__':
