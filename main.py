@@ -75,7 +75,6 @@ def endpoint_a1e(a):
 
 #B1G
 def gcd(a, b):
-    r = a % b
     while b != 0:
         a, b = b, a % b
     return a
