@@ -205,6 +205,27 @@ def endpoint_b2e():
                 <input type="text" id="name" name="name">
                 <input type="submit" value="Ausgeben">
             </form>""")
+    
+#B3G
+@app.route('/b3g', methods=['GET', 'POST'])
+def square():
+    if request.method == 'POST':
+        try:
+            data = request.form.get('num') # Daten aus Formular holen 
+            if data:
+                square = lambda data: data ** 2
+                return jsonify({"result": square(int(data))})
+            else:
+                return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste."}), 400
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    else:
+        return render_template_string("""
+            <form method="POST">
+                <label for="listInput">Geben Sie eine Zahl ein:</label>
+                <input type="number" id="num" name="num">
+                <input type="submit" value="Quadrieren">
+            </form>""")
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
