@@ -253,6 +253,38 @@ def endpoint_b3f():
                 <input type="text" id="listInput2" name="listInput2">
                 <input type="submit" value="Senden">
             </form>""")
+    
+#B3E
+@app.route('/b3e', methods=['GET', 'POST'])
+def endpoint_b3e():
+    if request.method == 'POST':
+        try:
+            list = request.form.get('list')
+            sort = request.form.get('sort')
+            if list:
+                list = list.split(",")
+                match sort:
+                    case 'asc':
+                        list = sorted(list, key=lambda x: len(x))
+                    case 'desc':
+                        list = sorted(list, key=lambda x: len(x), reverse=True)
+                return jsonify({"result": list})
+            else:
+                return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste."}), 400
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    else:
+        return render_template_string("""
+            <form method="POST">
+                <label for="list">Geben Sie eine Liste ein. Eine sortierte Liste wird zurückgegeben:</label>
+                <input type="text" id="list" name="list">
+                <select name="sort" id="sort">
+                    <option value="asc">Aufsteigend</option>
+                    <option value="desc">Absteigend</option>
+                </select>
+                <input type="submit" value="Senden">
+            </form>""")
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
