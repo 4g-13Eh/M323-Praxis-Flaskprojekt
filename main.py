@@ -322,7 +322,11 @@ def endpoint_b4g():
     
 
 #B4F
-
+@app.route('/b4f', methods=['POST'])
+def endpoint_b4f():
+    data = request.get_json()
+    result = reduce(lambda x, y: x + y, filter(lambda x: x % 2 == 0, map(lambda x: x ** 3, data)))
+    return jsonify({"result": result})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
