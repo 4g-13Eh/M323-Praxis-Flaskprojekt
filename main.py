@@ -328,5 +328,25 @@ def endpoint_b4f():
     result = reduce(lambda x, y: x + y, filter(lambda x: x % 2 == 0, map(lambda x: x ** 3, data)))
     return jsonify({"result": result})
 
+#B4E
+def get_average_population(data):
+    filtered_populations = list(map(lambda x: x['population'], filter(lambda x: x['population'] > 10000000 and x['region'] == 'Asia', data)))
+    total_population = reduce(lambda x, y: x + y, filtered_populations, 0)
+    return round(total_population / len(filtered_populations))
+
+def rearange_data(data):
+    filtered_populations = list(filter(lambda x: x['population'] > 10000000 and x['region'] == 'Asia', data))
+    reduced_data = list(map(lambda x: {'name': x['name'], 'capital': x['capital'], 'population': x['population']}, filtered_populations))
+    return sorted(reduced_data, key=lambda x: x['population'], reverse=True)
+
+
+@app.route('/b4e', methods=['POST'])
+def endpoint_b4e():
+    data = request.get_json()
+    average_population = get_average_population(data)
+    rearanged_data = rearange_data(data)
+    return jsonify({"Durchschnitts Bevölkerung für asiatische Länder mit über 10Mio Einwohner": average_population, "rearanged_data": rearanged_data})
+    
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
