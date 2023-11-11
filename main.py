@@ -153,9 +153,10 @@ def power_of(func, a, b):
 @app.route('/b2f', methods=['POST'])
 def endpoint_b2f():
     try:
-        num1 = request.form.get('num1') # Daten aus Formular holen 
-        num2 = request.form.get('num2') # Daten aus Formular holen
-        operation = request.form.get('operation') # Daten aus Formular holen
+        data = request.get_json()
+        operation = data['operation']
+        num1 = data['num1']
+        num2 = data['num2']
         if num1 and num2:
             num1 = int(num1)
             num2 = int(num2)
@@ -182,8 +183,9 @@ def greet(greeting_text):
 @app.route('/b2e', methods=['POST'])
 def endpoint_b2e():
     try:
-        text = request.form.get('greeting_text')  # Daten aus Formular holen
-        name = request.form.get('name')  # Daten aus Formular holen
+        data = request.get_json()
+        text = data['text']
+        name = data['name']
         if text and name:
             text = greet(text)
             result = text(name)
@@ -193,9 +195,9 @@ def endpoint_b2e():
     
 #B3G
 @app.route('/b3g', methods=['POST'])
-def square():
+def endpoint_b3g():
         try:
-            data = request.form.get('num') # Daten aus Formular holen 
+            data = request.get_json()
             if data:
                 square = lambda data: data ** 2
                 return jsonify({"result": square(int(data))})
@@ -208,8 +210,9 @@ def square():
 @app.route('/b3f', methods=['POST'])
 def endpoint_b3f():
     try:
-        list1 = request.form.get('listInput1') # Daten aus Formular holen 
-        list2 = request.form.get('listInput2') # Daten aus Formular holen
+        data = request.get_json()
+        list1 = data['list1']
+        list2 = data['list2']
         if list1 and list2:
             list1 = list1.split(",")
             list2 = list2.split(",")
@@ -224,8 +227,9 @@ def endpoint_b3f():
 @app.route('/b3e', methods=['POST'])
 def endpoint_b3e():
     try:
-        list = request.form.get('list')
-        sort = request.form.get('sort')
+        data = request.get_json()
+        list = data['list']
+        sort = data['sort']
         if list:
             list = list.split(",")
             match sort:
@@ -243,8 +247,9 @@ def endpoint_b3e():
 @app.route('/b4g', methods=['POST'])
 def endpoint_b4g():
     try:
-        input_list = request.form.get('list')
-        operation = request.form.get('operation')
+        input_list = request.get_json()
+        operation = input_list['operation']
+        input_list = input_list['list']
         if input_list:
             input_list = json.loads(input_list)
             match operation:
