@@ -121,17 +121,18 @@ def bubble_sort(arr):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
 
-def print_nums(numbers):
-    for num in numbers:
-        print(num, end=" ")
-    print()
+def format_nums(numbers):
+    if numbers is not None:
+        return ' '.join(map(str, numbers))
+    return None
 
 @app.route('/b1e', methods=['POST'])
 def endpoint_b1e():
         data = request.get_json()
         if data:
             bubble_sort(data)
-            return jsonify({"result": data})
+            formatted_nums = format_nums(data)
+            return jsonify({"result": data, "formatted_result": formatted_nums})
         else:
             return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste"}), 400
     
