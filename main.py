@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template_string, render_template
 from functools import reduce
 import json
+import timeit
 
 app = Flask(__name__)
 
@@ -64,13 +65,25 @@ def calculate_square(a):
 # functional
 calculate_square = lambda a: a * a
 
+def measure_execution_time(func, *args):
+    start_time = timeit.default_timer()
+    result = func(*args)
+    end_time = timeit.default_timer()
+    execution_time = end_time - start_time
+    return result, execution_time
+
 @app.route('/a1e/<int:a>', methods=['GET'])
 def endpoint_a1e(a):
     calc = SquareCalculator()
-    oo_res = calc.calculate_square(a)
-    proc_res = calculate_square(a)
-    func_res = calculate_square(a)
-    return f'Resultat: OO: {oo_res}, Procedural: {proc_res}, Functional: {func_res}'
+    oo_res, oo_time = measure_execution_time(calc.calculate_square, a)
+    proc_res, proc_time = measure_execution_time(calculate_square, a)
+    func_res, func_time = measure_execution_time(calculate_square, a)
+    sorted_results = sorted([
+        {"type": "OO", "result": oo_res, "time": oo_time},
+        {"type": "Procedural", "result": proc_res, "time": proc_time},
+        {"type": "Functional", "result": func_res, "time": func_time}
+    ], key=lambda x: x["time"])
+    return jsonify({"sorted_results": sorted_results})
 
 
 #B1G
@@ -319,7 +332,7 @@ def endpoint_b4g():
                 </select>
                 <input type="submit" value="Senden">
             </form>""")
-    
+
 
 #B4F
 @app.route('/b4f', methods=['POST'])
