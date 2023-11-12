@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, render_template
 from functools import reduce
-import json
 import timeit
 
 app = Flask(__name__)
@@ -20,7 +19,7 @@ def mul(a, b):
     return a * b
 
 @app.route('/a1g', methods=['POST'])
-def enpoint_a1g():
+def endpoint_a1g():
     data = request.get_json()
     operation = data['operation']
     num1 = data['num1']
@@ -32,7 +31,7 @@ def enpoint_a1g():
             sum = sub(num1, num2)
         case 'mul':
             sum = mul(num1, num2)
-    return jsonify({"result": sum})
+    return jsonify({"result": sum}), 200
 
 #A1F
 @app.route('/a1f', methods=['POST'])
@@ -45,7 +44,7 @@ def endpoint_a1f():
                 message = "Tupel veraendert."
             except TypeError as e:
                 message = "Tupel nicht verändert. Ist nicht möglich 💀"
-            return jsonify({"result_tuple": result_tuple, "message": message})
+            return jsonify({"result_tuple": result_tuple, "message": message}), 200
         else:
             return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste."}), 400
     
@@ -78,16 +77,22 @@ def endpoint_a1e():
     oo_res, oo_time = measure_execution_time(calc.calculate_square, data)
     proc_res, proc_time = measure_execution_time(calculate_square, data)
     func_res, func_time = measure_execution_time(calculate_square, data)
+    # Sortierung und Formatierung der Ergebnisse für den Vergleich
     results = [
         {"type": "Object Oriented", "result": oo_res, "executiontime": oo_time},
         {"type": "Procedural", "result": proc_res, "executiontime": proc_time},
         {"type": "Functional", "result": func_res, "executiontime": func_time}
     ]
-    return jsonify({"sorted_results": results})
+    return jsonify({"sorted_results": results}), 200
 
 
 #B1G
 def gcd(a, b):
+    """
+    Berechnet den größten gemeinsamen Teiler von a und b mithilfe des Euklidischen Algorithmus. 
+    Der Algorithmus wiederholt die Division, bis der Rest 0 ist. 
+    Der GCD ist dann die nicht-0-letzte Restzahl.
+    """
     while b != 0:
         a, b = b, a % b
     return a
@@ -97,11 +102,17 @@ def endpoint_b1g():
     data = request.get_json()
     a = data['a']
     b = data['b']
-    return f'Resultat: {gcd(a, b)}'
+    result = gcd(a, b)
+    return jsonify({"result": result}), 200
 
 
 #B1F
 def fibonacci(n):
+    """
+    berechnet die Fibonacci-Zahl für die gegebene Position n in der Fibonacci-Folge. 
+    Die Fibonacci-Folge beginnt mit den Zahlen 0 und 1, und jede nachfolgende Zahl 
+    ist die Summe der beiden vorherigen Zahlen.
+    """
     if n <= 1:
         return n
     else:
@@ -111,14 +122,21 @@ def fibonacci(n):
 def endpoint_b1f():
     data = request.get_json()
     n = data['n']
-    return f'Resultat: {fibonacci(n)}'
+    result = fibonacci(n)
+    return jsonify({"result": result}), 200
 
 #B1E
 def bubble_sort(arr):
+    """
+    Sortiert eine Liste arr mithilfe des Bubble-Sort-Algorithmus.
+    Der Bubble-Sort-Algorithmus vergleicht benachbarte Elemente und tauscht sie, wenn sie in der falschen Reihenfolge sind.
+    Dieser Prozess wird so lange wiederholt, bis die gesamte Liste sortiert ist.
+    """
     n = len(arr)
     for i in range(n):
         for j in range(0, n - i - 1):
             if arr[j] > arr[j + 1]:
+                # Tausche die benachbarten Elemente, wenn sie in der falschen Reihenfolge sind.
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
 
 def format_nums(numbers):
@@ -132,21 +150,26 @@ def endpoint_b1e():
         if data:
             bubble_sort(data)
             formatted_nums = format_nums(data)
-            return jsonify({"result": data, "formatted_result": formatted_nums})
+            return jsonify({"result": data, "formatted_result": formatted_nums}), 200
         else:
             return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste"}), 400
     
 #B2G
 @app.route('/b2g', methods=['POST'])
-def enpoint_b2g():
+def endpoint_b2g():
     data = request.get_json()
     a = data['a']
     b = data['b']
     sum = add(a, b)
-    return jsonify({"result": sum})
+    return jsonify({"result": sum}), 200
 
 #B2F
 def power_of(func, a, b):
+    """
+    Die Funktion power_of akzeptiert eine Funktion func, sowie zwei Zahlen a und b. 
+    Sie wendet die Funktion func (bis jetzt add, sub, mul) auf die Zahlen an und verwendet das Ergebnis 
+    als Exponenten, um a potenziert mit b zu berechnen.
+    """
     b = func(a, b)
     return a ** b
 
@@ -168,7 +191,7 @@ def endpoint_b2f():
                 case 'mul':
                     operation = mul
             result = power_of(operation, num1, num2)
-            return jsonify({"result": result})
+            return jsonify({"result": result}), 200
         else:
             return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste."}), 400
     except Exception as e:
@@ -189,7 +212,7 @@ def endpoint_b2e():
         if text and name:
             text = greet(text)
             result = text(name)
-            return jsonify({"result": result})
+            return jsonify({"result": result}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
@@ -200,7 +223,7 @@ def endpoint_b3g():
             data = request.get_json()
             if data:
                 square = lambda data: data ** 2
-                return jsonify({"result": square(int(data))})
+                return jsonify({"result": square(int(data))}), 200
             else:
                 return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste."}), 400
         except Exception as e:
@@ -214,15 +237,13 @@ def endpoint_b3f():
         list1 = data['list1']
         list2 = data['list2']
         if list1 and list2:
-            list1 = list1.split(",")
-            list2 = list2.split(",")
-            result = list(map(lambda x, y: max(int(x), int(y)), list1, list2))
-            return jsonify({"result": result})
+            result = list(map(lambda x, y: max(x, y), list1, list2))
+            return jsonify({"result": result}), 200
         else:
             return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste."}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 #B3E
 @app.route('/b3e', methods=['POST'])
 def endpoint_b3e():
@@ -231,13 +252,12 @@ def endpoint_b3e():
         list = data['list']
         sort = data['sort']
         if list:
-            list = list.split(",")
             match sort:
                 case 'asc':
                     list = sorted(list, key=lambda x: len(x))
                 case 'desc':
                     list = sorted(list, key=lambda x: len(x), reverse=True)
-            return jsonify({"result": list})
+            return jsonify({"result": list}), 200
         else:
             return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste."}), 400
     except Exception as e:
@@ -247,11 +267,10 @@ def endpoint_b3e():
 @app.route('/b4g', methods=['POST'])
 def endpoint_b4g():
     try:
-        input_list = request.get_json()
-        operation = input_list['operation']
-        input_list = input_list['list']
-        if input_list:
-            input_list = json.loads(input_list)
+        data = request.get_json()
+        operation = data['operation']
+        input_list = data['list']
+        if data:
             match operation:
                 case 'map':
                     result = list(map(lambda x: x * x, input_list))
@@ -260,7 +279,7 @@ def endpoint_b4g():
                 case 'reduce':
                     input_list = list(map(int, input_list))
                     result = reduce(lambda x, y: x + y, input_list)
-            return jsonify({"result": result})
+            return jsonify({"result": result}), 200
         else:
             return jsonify({"error": "Ungueltige Daten. Bitte senden Sie eine Liste."}), 400
     except Exception as e:
@@ -271,8 +290,11 @@ def endpoint_b4g():
 @app.route('/b4f', methods=['POST'])
 def endpoint_b4f():
     data = request.get_json()
+    # Potenziert jede Zahl in der Liste mit 3
+    # Filtert alle ungeraden Zahlen aus der Liste
+    # Addiert alle Zahlen in der übrigen Liste zusammen
     result = reduce(lambda x, y: x + y, filter(lambda x: x % 2 == 0, map(lambda x: x ** 3, data)))
-    return jsonify({"result": result})
+    return jsonify({"result": result}), 200
 
 #B4E
 def get_average_population(data):
@@ -291,7 +313,8 @@ def endpoint_b4e():
     data = request.get_json()
     average_population = get_average_population(data)
     rearanged_data = rearange_data(data)
-    return jsonify({"Durchschnitts Bevölkerung für asiatische Länder mit über 10Mio Einwohner": average_population, "rearanged_data": rearanged_data})
+    return jsonify({"average_population_asia_10": average_population, 
+                    "rearanged_data": rearanged_data}), 200
     
 
 if __name__ == '__main__':
