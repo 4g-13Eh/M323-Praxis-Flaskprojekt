@@ -48,6 +48,6 @@ oder
 
 
 ## Tests
-Die Endpoints wurde mit Postman getestet. Sie können die Tests mit dem untenstehenden Button importieren. Falls der Button nicht funktioniert, können Sie die Tests auch manuell importieren. Die Tests befinden sich im Verzeichnis ```tests```. Die Applikation muss gestartet sein, damit die Tests funktionieren.
+Die Endpoints wurde mit Postman getestet. Sie können die Tests mit dem untenstehenden Button importieren. Falls der Button  oder die Tests nicht funktionieren, können Sie die Tests auch manuell importieren. Die Tests befinden sich im Verzeichnis ```tests```. Die Applikation muss gestartet sein, damit die Tests funktionieren.
 
 [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/26136977-092e08fa-a279-483f-9f86-d14f178ed2d8?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D26136977-092e08fa-a279-483f-9f86-d14f178ed2d8%26entityType%3Dcollection%26workspaceId%3D378bc62c-a63d-448e-8372-032400ac36c1)
